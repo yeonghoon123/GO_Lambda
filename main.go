@@ -1,5 +1,13 @@
-package main
+/*
+프로그램ID: MN-100
+작성자: 김영훈
+작성일: 2023.11.15
+설명: Lambda 핸들러 함수
+버전: 0.7
+*/
+package main // 패키지명
 
+// 사용하는 모듈
 import (
 	"context"
 	"encoding/json"
@@ -9,13 +17,14 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
+// MN-ST-110 api gateway에서 받는 데이터 구조체
 type ResponseData struct {
 	Status  bool
 	Message string
 	Data    []dynamodb.ScanItem
 }
 
-// 람다 핸들러
+// MN-FN-110 람다 핸들러(context 데이터, api gateway request 데이터) return : api gateway response 데이터, error
 func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	var httpMethod = request.RequestContext.HTTP.Method                           // http method 데이터
 	var requestBody = request.Body                                                // client에서 받은 body 데이터
@@ -98,10 +107,10 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 		}, err
 	}
 
+	// 응답 생성
 	var response = events.APIGatewayV2HTTPResponse{}
 
 	if responseData.Status {
-		// 응답 생성
 		response = events.APIGatewayV2HTTPResponse{
 			StatusCode: 200,
 			Body:       string(responseBody),
@@ -116,6 +125,7 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 	return response, nil
 }
 
+// MN-FN-120 람다 핸들러 실행
 func main() {
 	lambda.Start(HandleRequest)
 }

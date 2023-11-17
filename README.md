@@ -12,23 +12,11 @@ git clone하여 프로젝트 설치
 
 <br>
 
-## Running the tests
-
-### Sample Tests
-
-main.go 파일 build
-
-    SET GOOS=linux& go build main.go
-
-빌드된 main 파일을 function.zip파일로 압축
-
-    zip function.zip main
-
 ## Built With
 
 ```
 GO
-Apigateway
+API Gateway
 Lambda
 DynamoDB
 ```

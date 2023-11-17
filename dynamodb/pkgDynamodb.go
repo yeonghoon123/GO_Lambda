@@ -1,5 +1,14 @@
-package dynamodb
+/*
+프로그램ID: PK-DY-100
+작성자: 김영훈
+작성일: 2023.11.15
+설명: Dynamo Control 함수 모음
+버전: 0.7
+*/
 
+package dynamodb // 패키지 명
+
+// 사용하는 모듈
 import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -9,14 +18,14 @@ import (
 	"fmt"
 )
 
-// language 데이터 구조체
+// DY-ST-100. language 데이터 구조체
 type Language_data struct {
 	Ko string `json:"ko"`
 	En string `json:"en"`
 	Ja string `json:"ja"`
 }
 
-// 클라이언트에서 받는 데이터 구조체
+// DY-ST-110. 클라이언트에서 받는 데이터 구조체
 type GetItem struct {
 	Id              string        `json:"id"`
 	Stt_text        string        `json:"sttText"`
@@ -26,7 +35,7 @@ type GetItem struct {
 	Language_name   Language_data `json:"languageName"`
 }
 
-// dynamodb 에 저장될 데이터 구조체
+// DY-ST-120.dynamodb 에 저장될 데이터 구조체
 type CreateItem struct {
 	Id              string
 	Stt_text        string
@@ -36,7 +45,7 @@ type CreateItem struct {
 	Language_name   Language_data
 }
 
-// 새로운 db 데이터 생성
+// DY-FN-100. 새로운 db 데이터 생성
 func CreateTableItem(data GetItem) error {
 	// 세션 생성
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
@@ -81,7 +90,7 @@ func CreateTableItem(data GetItem) error {
 	return nil
 }
 
-// dynamoDB에서 scan해올 데이터 구조체
+// DY-ST-130. dynamoDB에서 scan해올 데이터 구조체
 type ScanItem struct {
 	Id              string        `json:"Id"`
 	Stt_text        string        `json:"Stt_text"`
@@ -91,7 +100,7 @@ type ScanItem struct {
 	Language_name   Language_data `json:"Language_name"`
 }
 
-// dynamoDB 데이터 목록 가져오기
+// DY-FN-110. dynamoDB 데이터 목록 가져오기
 func GetSaveDataList() ([]ScanItem, error) {
 	tableName := "translator_app" // 데이터 생설할 데이터 이름
 
@@ -129,12 +138,12 @@ func GetSaveDataList() ([]ScanItem, error) {
 	return items, nil
 }
 
-// 저장된 데이터 id 구조체
+// DY-ST-140. 저장된 데이터 id 구조체
 type DeleteItem struct {
 	Id string `json:"Id"`
 }
 
-// 저장된 데이터 삭제
+// DY-FN-120. 저장된 데이터 삭제
 func DeleteSaveData(itemId DeleteItem) error {
 	tableName := "translator_app" // 데이터 생설할 데이터 이름
 
