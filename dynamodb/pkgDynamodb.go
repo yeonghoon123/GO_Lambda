@@ -14,35 +14,20 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-
-	"fmt"
 )
 
-// DY-ST-100. language 데이터 구조체
-type Language_data struct {
-	Ko string `json:"ko"`
-	En string `json:"en"`
-	Ja string `json:"ja"`
-}
-
-// DY-ST-110. 클라이언트에서 받는 데이터 구조체
+// DY-ST-100. 클라이언트에서 받는 데이터 구조체
 type GetItem struct {
-	Id              string        `json:"id"`
-	Stt_text        string        `json:"sttText"`
-	Language_code   string        `json:"languageCode"`
-	Tts_base64      Language_data `json:"ttsBase64"`
-	Translator_text Language_data `json:"translatorText"`
-	Language_name   Language_data `json:"languageName"`
+	Id            string `json:"id"`
+	Stt_text      string `json:"sttText"`
+	Language_code string `json:"languageCode"`
 }
 
-// DY-ST-120.dynamodb 에 저장될 데이터 구조체
+// DY-ST-110.dynamodb 에 저장될 데이터 구조체
 type CreateItem struct {
-	Id              string
-	Stt_text        string
-	Language_code   string
-	Tts_base64      Language_data
-	Translator_text Language_data
-	Language_name   Language_data
+	Id            string
+	Stt_text      string
+	Language_code string
 }
 
 // DY-FN-100. 새로운 db 데이터 생성
@@ -57,20 +42,15 @@ func CreateTableItem(data GetItem) error {
 
 	// 저장할 데이터
 	item := CreateItem{
-		Id:              data.Id,
-		Stt_text:        data.Stt_text,
-		Language_code:   data.Language_code,
-		Tts_base64:      data.Tts_base64,
-		Translator_text: data.Translator_text,
-		Language_name:   data.Language_name,
+		Id:            data.Id,
+		Stt_text:      data.Stt_text,
+		Language_code: data.Language_code,
 	}
 
 	av, err := dynamodbattribute.MarshalMap(item) // dynamo db 데이터 변환
 	if err != nil {
 		return err
 	}
-
-	fmt.Println(av)
 
 	tableName := "translator_app" // 데이터 생설할 데이터 이름
 
@@ -90,14 +70,11 @@ func CreateTableItem(data GetItem) error {
 	return nil
 }
 
-// DY-ST-130. dynamoDB에서 scan해올 데이터 구조체
+// DY-ST-120. dynamoDB에서 scan해올 데이터 구조체
 type ScanItem struct {
-	Id              string        `json:"Id"`
-	Stt_text        string        `json:"Stt_text"`
-	Language_code   string        `json:"Language_code"`
-	Tts_base64      Language_data `json:"Tts_base64"`
-	Translator_text Language_data `json:"Translator_text"`
-	Language_name   Language_data `json:"Language_name"`
+	Id            string `json:"Id"`
+	Stt_text      string `json:"Stt_text"`
+	Language_code string `json:"Language_code"`
 }
 
 // DY-FN-110. dynamoDB 데이터 목록 가져오기
@@ -138,7 +115,7 @@ func GetSaveDataList() ([]ScanItem, error) {
 	return items, nil
 }
 
-// DY-ST-140. 저장된 데이터 id 구조체
+// DY-ST-130. 저장된 데이터 id 구조체
 type DeleteItem struct {
 	Id string `json:"Id"`
 }

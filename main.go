@@ -11,6 +11,7 @@ package main // 패키지명
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"yeonghoon123/GO_Lambda/dynamodb"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -35,6 +36,8 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 	case "GET":
 		scanItem, err := dynamodb.GetSaveDataList()
 		if err != nil {
+			fmt.Println(err)
+
 			responseData = ResponseData{
 				Status:  false,
 				Message: "Scanning Data failed",
@@ -42,7 +45,7 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 		} else {
 			responseData = ResponseData{
 				Status:  true,
-				Message: "Scanning Data failed success",
+				Message: "Scanning Data success",
 				Data:    scanItem,
 			}
 		}
@@ -51,6 +54,8 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 		// JSON 데이터를 Go의 구조체로 변환하는 예시
 		var getItemInput dynamodb.GetItem
 		if err := json.Unmarshal([]byte(requestBody), &getItemInput); err != nil {
+			fmt.Println(err)
+
 			// 에러 처리
 			responseData = ResponseData{
 				Status:  false,
@@ -61,6 +66,8 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 		err := dynamodb.CreateTableItem(getItemInput)
 
 		if err != nil {
+			fmt.Println(err)
+
 			responseData = ResponseData{
 				Status:  false,
 				Message: "Create item failed",
@@ -86,6 +93,8 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 		err := dynamodb.DeleteSaveData(DeleteItemInput)
 
 		if err != nil {
+			fmt.Println(err)
+
 			responseData = ResponseData{
 				Status:  false,
 				Message: "Delete item failed",
@@ -101,6 +110,8 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 	// 응답 데이터를 JSON으로 마샬링
 	responseBody, err := json.Marshal(responseData)
 	if err != nil {
+		fmt.Println(err)
+
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: 500,
 			Body:       "Error marshaling response data to JSON",
@@ -116,6 +127,8 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 			Body:       string(responseBody),
 		}
 	} else {
+		fmt.Println(err)
+
 		response = events.APIGatewayV2HTTPResponse{
 			StatusCode: 500,
 			Body:       string(responseBody),

@@ -12,6 +12,26 @@ git clone하여 프로젝트 설치
 
 <br>
 
+## Running the tests
+
+### Sample Tests
+
+main.go 파일 build
+
+    SET GOOS=linux& go build main.go
+
+빌드된 main 파일을 function.zip파일로 압축
+
+    zip function.zip main
+
+Lambda 업로드 command
+
+    aws lambda update-function-code --function-name my-funtion-name --zip-file fileb://function.zip
+
+<br>
+
+압축한 function.zip 파일을 업로드 하거나, aws 커맨드를 이용하여 Lambda 업로드
+
 ## Built With
 
 ```
